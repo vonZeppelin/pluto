@@ -1,0 +1,31 @@
+package org.lbogdanov.btlock.objc;
+
+import static org.lbogdanov.btlock.App.BUS;
+import static org.lbogdanov.btlock.objc.Frameworks.CORE_BLUETOOTH;
+
+import com.apple.jobjc.corebluetooth.CBCentralManager;
+import com.squareup.otto.Subscribe;
+import org.lbogdanov.btlock.events.StartDiscovery;
+import org.slf4j.*;
+
+public class CBActor {
+    private static final Logger logger = LoggerFactory.getLogger(CBActor.class);
+
+    private CBCentralManager cbManager;
+
+    public CBActor() {
+        BUS.register(this);
+    }
+
+    @Subscribe public void startDiscovery(StartDiscovery event) {
+        ManagerDelegate delegate = new ManagerDelegateClass().newID();
+        CBCentralManager manager = CORE_BLUETOOTH.CBCentralManager().alloc();
+        cbManager = manager.initWithDelegate_queue(delegate, null);
+
+        logger.info("Discovery of BLE devices started...");
+    }
+
+    public void release() {
+        cbManager.release();
+    }
+}

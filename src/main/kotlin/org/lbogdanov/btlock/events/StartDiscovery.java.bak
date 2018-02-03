@@ -1,5 +1,3 @@
 package org.lbogdanov.btlock.events;
 
-public class StartDiscovery {
-    
-}
+public class StartDiscovery {}

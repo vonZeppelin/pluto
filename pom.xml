@@ -5,23 +5,27 @@
     <artifactId>btlock</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>btlock</name>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <kotlin.version>1.2.21</kotlin.version>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     </properties>
+
     <repositories>
         <repository>
             <id>local-repo</id>
             <url>file://${project.basedir}/libs</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>local-repo</id>
             <url>file://${project.basedir}/libs</url>
         </pluginRepository>
     </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>com.apple</groupId>
@@ -32,6 +36,16 @@
             <groupId>com.squareup</groupId>
             <artifactId>otto</artifactId>
             <version>1.3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>tornadofx</artifactId>
+            <version>1.7.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -58,8 +72,25 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
     <build>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <plugins>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${kotlin.version}</version>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -90,7 +121,7 @@
                                     </chainedmapper>
                                 </copy>
                                 <bundleapp outputdirectory="${project.build.directory}"
-                                           mainclassname="org.lbogdanov.btlock.App"
+                                           mainclassname="btlock.AppKt"
                                            name="btlock"
                                            displayname="btlock"
                                            identifier="org.lbogdanov.btlock"

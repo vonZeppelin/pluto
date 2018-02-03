@@ -1,0 +1,52 @@
+package org.lbogdanov.btlock.objc;
+
+import static org.lbogdanov.btlock.App.BUS;
+import static org.lbogdanov.btlock.objc.Frameworks.CORE_BLUETOOTH;
+import com.apple.jobjc.*;
+import com.apple.jobjc.corebluetooth.*;
+import com.apple.jobjc.foundation.*;
+import org.lbogdanov.btlock.events.PeripheralDiscovered;
+import org.slf4j.*;
+import java.util.UUID;
+
+class ManagerDelegate extends NSObject {
+    private static final Logger logger = LoggerFactory.getLogger(ManagerDelegate.class);
+    private static final Utils jobjcUtils = Utils.get();
+
+    public ManagerDelegate(long objPtr, JObjCRuntime runtime) {
+        super(objPtr, runtime);
+    }
+
+    public void centralManagerDidUpdateState(CBCentralManager manager) {
+        if (manager.state() == CORE_BLUETOOTH.CBCentralManagerStatePoweredOn()) {
+            manager.scanForPeripheralsWithServices_options(null, null);
+        }
+    }
+
+    public void centralManager_didDiscoverPeripheral_advertisementData_RSSI(CBCentralManager manager,
+                                                                            CBPeripheral peripheral,
+                                                                            NSDictionary data,
+                                                                            NSNumber rssi) {
+        logger.info(
+            "New peripheral discovered: UUID {}, rssi {}",
+            jobjcUtils.strings().javaString(data.description()),
+//            jobjcUtils.strings().javaString(peripheral.identifier().UUIDString()),
+            jobjcUtils.numbers().javaNumber(rssi)
+        );
+        BUS.post(new PeripheralDiscovered(
+            UUID.fromString(
+                jobjcUtils.strings().javaString(peripheral.identifier().UUIDString())
+            ),
+            jobjcUtils.strings().javaString(peripheral.name())
+        ));
+    }
+
+    public void centralManager_didDisconnectPeripheral_error(CBCentralManager manager,
+                                                             CBPeripheral peripheral,
+                                                             NSError error) {
+        logger.info(
+            "Peripheral disconnected: UUID {}",
+            jobjcUtils.strings().javaString(peripheral.identifier().UUIDString())
+        );
+    }
+}
