@@ -1,11 +1,10 @@
-package org.lbogdanov.btlock.ui
+package btlock.ui
 
-import org.lbogdanov.btlock.ui.ScanDialog$Controller
 import org.tbee.javafx.scene.layout.fxml.MigPane
 
 import javafx.scene.control.*
 
-component ScanDialog controlledby ScanDialog$Controller {
+component SettingsView {
     MigPane {
         layout : "ins 2, wrap, debug",
         cols : "[160]unrel[420]",
@@ -35,7 +34,6 @@ component ScanDialog controlledby ScanDialog$Controller {
             },
             Button id connectButton {
                 text : "Connect",
-                onAction : controllermethod connect,
                 static cc : "center"
             }
         ]

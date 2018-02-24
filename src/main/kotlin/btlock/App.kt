@@ -1,28 +1,52 @@
 package btlock
 
 import btlock.ui.*
-import org.slf4j.*
+import mu.*
 import tornadofx.*
 
-import java.awt.*
 import javafx.application.*
+import javafx.event.*
+import javafx.scene.control.*
+import javafx.stage.*
+import java.util.concurrent.atomic.*
 
-/**
- * 
- */
+private val logger = KotlinLogging.logger {}
+
 class BTLock : App(SettingsView::class) {
-    private val logger = LoggerFactory.getLogger(javaClass)
 
-    init {
-        trayicon(icon = resources.stream("/lock.png"), tooltip = "BT Lock") {
+    override fun start(stage: Stage) {
+        super.start(stage)
+
+        trayicon(resources.stream("lock.png"), tooltip = "BT Lock") {
             menu("") {
-                add(CheckboxMenuItem("Enable", true)).setOnAction {}
+                checkboxItem("Enable", state = true) {
+                    setOnItem {
+                        println(it)
+                    }
+                }
                 item("Settings...") {
-                    setOnAction {}
+                    val isDialogShown = AtomicBoolean(false)
+                    setOnAction(fxThread = true) {
+                        if (isDialogShown.compareAndSet(false, true)) {
+                            Alert(Alert.AlertType.NONE, "", ButtonType.CLOSE)
+                                .apply {
+                                    val view = find(SettingsView::class)
+                                    dialogPane.content = view.root
+                                    onShown = EventHandler {
+                                        view.startDiscovery()
+                                    }
+                                    onHidden = EventHandler {
+                                        view.stopDiscovery()
+                                        isDialogShown.set(false)
+                                    }
+                                }
+                                .show()
+                        }
+                    }
                 }
                 addSeparator()
                 item("Exit") {
-                    setOnAction(fxThread = true) {
+                    setOnAction {
                         Platform.exit()
                     }
                 }
@@ -30,11 +54,10 @@ class BTLock : App(SettingsView::class) {
         }
     }
 
-    override fun onBeforeShow(view: UIComponent) {
-        logger.info("Application started...")
-    }
+    override fun onBeforeShow(view: UIComponent) = logger.info("Application started...")
+
+    override fun shouldShowPrimaryStage() = false
+
 }
 
-fun main(args: Array<String>) {
-    launch<BTLock>(args)
-}
+fun main(args: Array<String>) = launch<BTLock>(args)

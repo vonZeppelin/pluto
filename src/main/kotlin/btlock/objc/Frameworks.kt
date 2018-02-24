@@ -7,10 +7,13 @@ import com.apple.jobjc.foundation.*
 
 object Frameworks {
 
-    val JOBJC : JObjCRuntime
-    val FOUNDATION : FoundationFramework
-    val CORE_FOUNDATION : CoreFoundationFramework
-    val CORE_BLUETOOTH : CoreBluetoothFramework
+    val JOBJC: JObjCRuntime
+    val FOUNDATION: FoundationFramework
+    val CORE_FOUNDATION: CoreFoundationFramework
+    val CORE_BLUETOOTH:  CoreBluetoothFramework
+
+    val objcNumbers: Utils.Numbers
+    val objcStrings: Utils.Strings
 
     init {
         val jobjc = JObjC.getInstance()
@@ -19,7 +22,11 @@ object Frameworks {
         CORE_BLUETOOTH = jobjc.CoreBluetooth()
         JOBJC = JObjCRuntime.getInstance()
 
-        //JOBJC.registerUserClass(javaClass<ManagerDelegate>, javaClass<ManagerDelegateClass>)
+        val utils = Utils.get()
+        objcNumbers = utils.numbers()
+        objcStrings = utils.strings()
+
+        JOBJC.registerUserClass(ManagerDelegate::class.java, ManagerDelegateClass::class.java)
     }
 
 }
