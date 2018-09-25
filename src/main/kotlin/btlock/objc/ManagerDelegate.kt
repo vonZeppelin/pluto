@@ -1,7 +1,7 @@
 package btlock.objc
 
 import btlock.events.*
-import btlock.objc.Frameworks.CORE_BLUETOOTH
+import btlock.objc.Frameworks.CoreBluetooth
 import btlock.objc.Frameworks.objcNumbers
 import btlock.objc.Frameworks.objcStrings
 import com.apple.jobjc.*
@@ -12,12 +12,12 @@ import tornadofx.*
 
 private val logger = KotlinLogging.logger {}
 
-class ManagerDelegateClass : NSObjectClass(Frameworks.JOBJC)
+class ManagerDelegateClass : NSObjectClass(Frameworks.objcRuntime)
 
-class ManagerDelegate(ptr: Long, rt: JObjCRuntime) : NSObject(ptr, rt) {
+class ManagerDelegate(ptr: Long, rt: JObjCRuntime): NSObject(ptr, rt) {
 
     fun centralManagerDidUpdateState(manager: CBCentralManager) {
-        if (manager.state() == CORE_BLUETOOTH.CBCentralManagerStatePoweredOn().toLong()) {
+        if (manager.state() == CoreBluetooth.CBCentralManagerStatePoweredOn().toLong()) {
             manager.scanForPeripheralsWithServices_options(null, null)
         }
     }

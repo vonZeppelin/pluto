@@ -1,7 +1,7 @@
 package btlock.ui
 
 import btlock.objc.*
-import btlock.objc.Frameworks.CORE_BLUETOOTH
+import btlock.objc.Frameworks.CoreBluetooth
 import com.apple.jobjc.corebluetooth.*
 import mu.*
 import tornadofx.*
@@ -16,15 +16,15 @@ class SettingsController : Controller() {
 
     fun startDiscovery() {
         val delegate = ManagerDelegateClass().newID<ManagerDelegate>()
-        cbManager = CORE_BLUETOOTH.CBCentralManager()
-                                  .alloc<CBCentralManager>()
-                                  .initWithDelegate_queue(delegate, null)
+        cbManager = CoreBluetooth.CBCentralManager()
+                                 .alloc<CBCentralManager>()
+                                 .initWithDelegate_queue(delegate, null)
 
         logger.info("Discovery of BLE devices started...")
     }
 
     fun stopDiscovery() {
-        cbManager?.release()
+        cbManager?.stopScan()
     }
 
 }

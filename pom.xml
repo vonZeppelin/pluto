@@ -7,9 +7,10 @@
     <name>btlock</name>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.2.21</kotlin.version>
+        <kotlin.version>1.2.70</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <miglayout.version>5.1</miglayout.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -35,17 +36,17 @@
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-javafx</artifactId>
-            <version>5.0</version>
+            <version>${miglayout.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging</artifactId>
-            <version>1.4.9</version>
+            <version>1.6.10</version>
         </dependency>
         <dependency>
             <groupId>no.tornado</groupId>
             <artifactId>tornadofx</artifactId>
-            <version>1.7.15</version>
+            <version>1.7.17</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -95,15 +96,26 @@
                         <artifactId>appbundler</artifactId>
                         <version>1.0ea</version>
                     </dependency>
+                    <dependency>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>scenebuilder</artifactId>
+                        <version>8.5.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.miglayout</groupId>
+                        <artifactId>miglayout-javafx</artifactId>
+                        <version>${miglayout.version}</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
+                        <id>appbundler</id>
                         <phase>package</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target name="bundle">
+                            <target>
                                 <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" />
                                 <dependencyfilesets projectDependenciesId="jars" scopes="compile,runtime" types="jar" />
                                 <dependencyfilesets projectDependenciesId="native-libs" types="dylib" />
@@ -119,11 +131,25 @@
                                            name="btlock"
                                            displayname="btlock"
                                            identifier="org.lbogdanov.btlock"
-                                           jvmrequired="1.8">
+                                           jvmrequired="1.8"
+                                           hideDockIcon="true">
                                     <classpath file="${project.build.directory}/${project.build.finalName}.jar" />
                                     <classpath refid="jars" />
                                     <librarypath dir="${project.build.directory}/native-libs" />
                                 </bundleapp>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>scenebuilder</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <java classname="com.oracle.javafx.scenebuilder.app.SceneBuilderApp" fork="true">
+                                    <classpath refid="maven.plugin.classpath" />
+                                </java>
                             </target>
                         </configuration>
                     </execution>

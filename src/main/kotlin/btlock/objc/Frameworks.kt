@@ -7,26 +7,25 @@ import com.apple.jobjc.foundation.*
 
 object Frameworks {
 
-    val JOBJC: JObjCRuntime
-    val FOUNDATION: FoundationFramework
-    val CORE_FOUNDATION: CoreFoundationFramework
-    val CORE_BLUETOOTH:  CoreBluetoothFramework
-
+    val CoreBluetooth:  CoreBluetoothFramework
+    val CoreFoundation: CoreFoundationFramework
+    val Foundation: FoundationFramework
     val objcNumbers: Utils.Numbers
+    val objcRuntime: JObjCRuntime
     val objcStrings: Utils.Strings
 
     init {
         val jobjc = JObjC.getInstance()
-        FOUNDATION = jobjc.Foundation()
-        CORE_FOUNDATION = jobjc.CoreFoundation()
-        CORE_BLUETOOTH = jobjc.CoreBluetooth()
-        JOBJC = JObjCRuntime.getInstance()
+        Foundation = jobjc.Foundation()
+        CoreFoundation = jobjc.CoreFoundation()
+        CoreBluetooth = jobjc.CoreBluetooth()
+        objcRuntime = JObjCRuntime.getInstance()
 
         val utils = Utils.get()
         objcNumbers = utils.numbers()
         objcStrings = utils.strings()
 
-        JOBJC.registerUserClass(ManagerDelegate::class.java, ManagerDelegateClass::class.java)
+        objcRuntime.registerUserClass(ManagerDelegate::class.java, ManagerDelegateClass::class.java)
     }
 
 }
