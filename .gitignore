@@ -1,8 +1,6 @@
 .idea/
-.settings/
-target/
-.classpath
-.project
+.venv/
+__pycache__/
 *.iml
 *.ipr
 *.iws
