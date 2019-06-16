@@ -1,15 +1,15 @@
 package btlock.ui
 
 import btlock.events.*
-import org.tbee.javafx.scene.layout.*
 import tornadofx.*
 
 import javafx.scene.control.*
+import javafx.scene.layout.BorderPane
 
-class SettingsView : View() {
+class MainView : View() {
 
-    override val root: MigPane by fxml()
-    private val controller: SettingsController by inject()
+    override val root: BorderPane by fxml()
+    private val controller: MainController by inject()
 
     private val connectButton: Button by fxid()
     private val devicesList: ListView<Any> by fxid()
@@ -19,6 +19,7 @@ class SettingsView : View() {
         connectButton.disableWhen {
             devicesList.selectionModel.selectedItemProperty().isNull
         }
+        startDiscovery()
     }
 
     fun startDiscovery() {

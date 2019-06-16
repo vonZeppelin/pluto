@@ -8,7 +8,7 @@ import tornadofx.*
 
 private val logger = KotlinLogging.logger {}
 
-class SettingsController : Controller() {
+class MainController : Controller() {
 
     private var cbManager: CBCentralManager? = null
 
