@@ -1,12 +1,11 @@
-import os
-import resources
+import resources # noqa
 import sys
 
-from PyQt5.QtWidgets import QApplication
+from PySide6.QtQuickControls2 import QQuickStyle
+from PySide6.QtWidgets import QApplication
 
-from app_window import AppWindow
-from constants import APP_NAME
-from tray import init_tray_icon
+from config import APP_NAME
+from tray import TrayManager
 
 
 def main():
@@ -16,14 +15,14 @@ def main():
     app.setApplicationName(APP_NAME)
     app.setApplicationDisplayName(APP_NAME)
 
-    app_window = AppWindow()
-    tray_icon = init_tray_icon(app_window)
-    tray_icon.show()
+    tray_manager = TrayManager.init(app)
+    if tray_manager:
+        return app.exec()
+    else:
+        return 1
 
-    return app.exec_()
 
-
-if __name__ == '__main__':
-    # workaround for missing PyQT5.QQuickStyle class
-    os.environ['QT_QUICK_CONTROLS_STYLE'] = 'material'
+if __name__ == "__main__":
+    # os.environ["QT_QUICK_CONTROLS_MATERIAL_VARIANT"] = "Dense"
+    QQuickStyle.setStyle("Material")
     sys.exit(main())

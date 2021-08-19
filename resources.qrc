@@ -4,6 +4,6 @@
      <file alias="app.png">resources/app.png</file>
    </qresource>
   <qresource prefix="/">
-     <file alias="main.qml">main.qml</file>
+     <file alias="app_window.qml">resources/app_window.qml</file>
    </qresource>
 </RCC>

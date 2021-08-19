@@ -1,28 +1,33 @@
-import sys
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QMenu, QMessageBox, QSystemTrayIcon
 
-from constants import APP_NAME
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMessageBox, QSystemTrayIcon
-
-
-def tray_icon_activated(reason, app_window, tray_icon):
-    if reason in {QSystemTrayIcon.Trigger, QSystemTrayIcon.DoubleClick}:
-        app_window.show(tray_icon.geometry())
+from config import APP_NAME
 
 
-def init_tray_icon(app_window):
-    if not QSystemTrayIcon.isSystemTrayAvailable():
-        QMessageBox.critical(
-            None, APP_NAME, 'System tray is not supported, app will exit'
-        )
-        sys.exit(1)
+class TrayManager(object):
 
-    icon = QIcon(':/images/app.png')
-    icon.setIsMask(True)
+    def __init__(self, app):
+        icon = QIcon(":/images/app.png")
+        icon.setIsMask(True)
+        self._tray_icon = QSystemTrayIcon(icon, app)
+        self._tray_icon.setToolTip(APP_NAME)
 
-    tray_icon = QSystemTrayIcon(icon, app_window)
-    tray_icon.activated.connect(
-        lambda reason: tray_icon_activated(reason, app_window, tray_icon)
-    )
-    tray_icon.setToolTip(APP_NAME)
-    return tray_icon
+        main_menu = QMenu(APP_NAME)
+        quit_action = main_menu.addAction("Quit")
+        quit_action.triggered.connect(app.quit)
+        self._tray_icon.setContextMenu(main_menu)
+        self._tray_icon.show()
+
+    @staticmethod
+    def init(app):
+        if not QSystemTrayIcon.isSystemTrayAvailable():
+            QMessageBox.critical(
+                None, APP_NAME, "System tray is not supported, app will exit"
+            )
+            return None
+        if not True:
+            QMessageBox.critical(
+                None, APP_NAME, "BLE is not supported, app will exit"
+            )
+            return None
+        return TrayManager(app)
