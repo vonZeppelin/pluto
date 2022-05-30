@@ -1,9 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/images">
-     <file alias="app.png">resources/app.png</file>
-   </qresource>
-  <qresource prefix="/">
-     <file alias="app_window.qml">resources/app_window.qml</file>
+     <file alias="app_on.png">resources/app_on.png</file>
+     <file alias="app_off.png">resources/app_off.png</file>
    </qresource>
 </RCC>
